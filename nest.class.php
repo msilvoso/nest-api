@@ -412,7 +412,10 @@ class Nest
             'target' => (object) array(
                 'mode' => $target_mode,
                 'temperature' => $target_temperatures,
-                'time_to_target' => $this->last_status->device->{$serial_number}->time_to_target
+                'time_to_target' => $this->last_status->device->{$serial_number}->time_to_target,
+                'hot_water_mode' => isset($this->last_status->device->{$serial_number}->hot_water_mode)? $this->last_status->device->{$serial_number}->hot_water_mode: '',
+                'hot_water_active' => isset($this->last_status->device->{$serial_number}->hot_water_active)?$this->last_status->device->{$serial_number}->hot_water_active:0,
+                'hot_water_temperature' => isset($this->last_status->device->{$serial_number}->hot_water_temperature)?$this->temperatureInUserScale((float) $this->last_status->device->{$serial_number}->hot_water_temperature): 0
             ),
             'serial_number' => $this->last_status->device->{$serial_number}->serial_number,
             'scale' => $this->last_status->device->{$serial_number}->temperature_scale,
@@ -421,7 +424,10 @@ class Nest
             'name' => !empty($this->last_status->shared->{$serial_number}->name) ? $this->last_status->shared->{$serial_number}->name : DEVICE_WITH_NO_NAME,
             'auto_cool' => ((int) $this->last_status->device->{$serial_number}->leaf_threshold_cool === 0) ? FALSE : ceil($this->temperatureInUserScale((float) $this->last_status->device->{$serial_number}->leaf_threshold_cool)),
             'auto_heat' => ((int) $this->last_status->device->{$serial_number}->leaf_threshold_heat === 1000) ? FALSE : floor($this->temperatureInUserScale((float) $this->last_status->device->{$serial_number}->leaf_threshold_heat)),
-            'where' => isset($this->last_status->device->{$serial_number}->where_id) ? isset($this->where_map[$this->last_status->device->{$serial_number}->where_id]) ? $this->where_map[$this->last_status->device->{$serial_number}->where_id] : $this->last_status->device->{$serial_number}->where_id : ""
+            'where' => isset($this->last_status->device->{$serial_number}->where_id) ? isset($this->where_map[$this->last_status->device->{$serial_number}->where_id]) ? $this->where_map[$this->last_status->device->{$serial_number}->where_id] : $this->last_status->device->{$serial_number}->where_id : "",
+            'has_hot_water_control' => isset($this->last_status->device->{$serial_number}->has_hot_water_control)?$this->last_status->device->{$serial_number}->has_hot_water_control:0,
+            'current_water_temperature' => isset($this->last_status->device->{$serial_number}->hot_water_temperature)?$this->temperatureInUserScale((float) $this->last_status->device->{$serial_number}->current_water_temperature): 0,
+            'hot_water_boost_time_to_end' => isset($this->last_status->device->{$serial_number}->hot_water_active)?$this->last_status->device->{$serial_number}->hot_water_boost_time_to_end:0
         );
         if ($this->last_status->device->{$serial_number}->has_humidifier) {
             $infos->current_state->humidifier = $this->last_status->device->{$serial_number}->humidifier_state;
